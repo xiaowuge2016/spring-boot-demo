@@ -1,4 +1,8 @@
-# Spring Boot Demo
- - spring boot web 最小系统
- - 基于 2.0.2 版本
- - 'hello, world'
+# Spring Boot + Docker  Demo
+
+## 使用说明
+ 1. linux 环境下运行（安装好docker、maven）
+ 2. 构建命令  # mvn docker:build
+ 3. 启动命令  # docker run -d -p 58080:8080 -m 512m com.lifujian/demo:1.0.0
+ 4. 浏览器访问  http://127.0.0.1:58080/
+ 
