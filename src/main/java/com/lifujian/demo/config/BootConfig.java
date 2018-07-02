@@ -1,9 +1,15 @@
 package com.lifujian.demo.config;
 
+import java.time.Duration;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.cache.RedisCacheConfiguration;
+import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
@@ -15,6 +21,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
  * @description Srpring Boot 配置
  */
 @Configuration
+@EnableCaching
 public class BootConfig {
 
     public static final Logger logger = LoggerFactory.getLogger(BootConfig.class);
@@ -31,6 +38,21 @@ public class BootConfig {
         template.setHashValueSerializer(new GenericJackson2JsonRedisSerializer());
         template.afterPropertiesSet();
         return template;
+    }
+
+    //缓存管理器
+    @Bean
+    public CacheManager cacheManager(LettuceConnectionFactory redisConnectionFactory) {
+        RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig()
+                .entryTtl(Duration.ofSeconds(15))  // set cache ttl
+                .prefixKeysWith("hello_")
+                .disableCachingNullValues();
+        
+        RedisCacheManager.RedisCacheManagerBuilder builder = RedisCacheManager
+                .RedisCacheManagerBuilder
+                .fromConnectionFactory(redisConnectionFactory)
+                .cacheDefaults(config);
+        return builder.build();
     }
 
 }
