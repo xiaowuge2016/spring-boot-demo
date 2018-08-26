@@ -2,6 +2,9 @@ package com.lifujian.demo.config;
 
 import java.time.Duration;
 
+import javax.jms.Queue;
+
+import org.apache.activemq.command.ActiveMQQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.CacheManager;
@@ -53,6 +56,12 @@ public class BootConfig {
                 .fromConnectionFactory(redisConnectionFactory)
                 .cacheDefaults(config);
         return builder.build();
+    }
+    
+    // activemq
+    @Bean
+    public Queue queue() {
+        return new ActiveMQQueue("sample.queue");
     }
 
 }
